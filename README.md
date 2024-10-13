@@ -1,15 +1,55 @@
-# ResQ Data Pipeline Project
+# ResQ Data Pipeline Project 
 
-## Project Description
-
+## Project Description 
 This project implements a data pipeline for ResQ Club to create a presentation table that combines data from three tables: `orders`, `providers`, and `users`. The goal is to provide analysts with a single table from which they can run queries using only `SELECT` statements, without needing to perform joins or complex transformations.
-
 The pipeline involves:
 
 - Extracting data from a SQLite database.
+
 - Loading the data into Google BigQuery.
+
 - Transforming the data to create a presentation table in BigQuery.
+
 - Providing SQL queries to answer specific business questions.
+
+You can access the following deliverables:
+ 
+- [ResQDashboard.pdf](https://github.com/Avashesh07/resq-data-pipeline/blob/main/ResQDashboard.pdf) : An overview of the key metrics and visualizations for the project.
+ 
+- [resqDataAnalysis.ipynb](https://github.com/Avashesh07/resq-data-pipeline/blob/main/resqDataAnalysis.ipynb) : Jupyter Notebook for Customer Lifetime Value (CLV) analysis and more.
+
+## Table of Contents 
+ 
+- Project Description
+ 
+- Prerequisites
+ 
+- Project Structure
+ 
+- Setup Instructions
+  - 1. Clone the Repository
+ 
+  - 2. Navigate to the Project Directory
+ 
+  - 3. Install Required Python Packages
+ 
+  - 4. Set Up Google Cloud Credentials
+ 
+  - 5. Place the SQLite Database File
+ 
+- Running the Pipeline
+  - Step 1: Extract Data and Load into BigQuery
+ 
+  - Step 2: Create the Presentation Table in BigQuery
+ 
+  - Step 3: Run Analyst Queries
+ 
+- Task 2: Customer Lifetime Value (CLV) Analysis
+ 
+- Challenges and Solutions
+
+---
+
 
 ## Prerequisites
 
@@ -321,12 +361,6 @@ You can multiply the above values to get the final CLV estimate.
 
 
 ---
-
-
-## License 
-
-This project is provided under the MIT License.
-
 
 
 
