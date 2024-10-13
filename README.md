@@ -232,21 +232,6 @@ Approach and Explanation
 
 -   Provided SQL scripts to answer specific business questions, ensuring the analyst can run them directly on the `presentation_table` without needing to perform joins or additional transformations.
 
-Challenges and Solutions
-------------------------
-
--   **Data Type Mismatches**:
-
-    -   Initially, some columns had incorrect data types (e.g., `quantity` as STRING).
-    -   **Solution**: Defined explicit schemas and cast columns to correct data types both in the Python script and SQL queries.
--   **Case Sensitivity in Column Names**:
-
-    -   Encountered errors due to mismatches in column name cases between the DataFrames and BigQuery schemas.
-    -   **Solution**: Standardized column names to lowercase throughout and ensured schema field names matched exactly.
--   **Authentication Issues**:
-
-    -   Faced authentication errors when connecting to BigQuery.
-    -   **Solution**: Ensured Google Cloud SDK was installed and authenticated properly using `gcloud auth application-default login`.
 
 Additional Notes
 ----------------
@@ -264,9 +249,95 @@ Additional Notes
     -   Implement error handling and logging in the Python script for better debugging.
     -   Automate the data pipeline using cloud services like Cloud Functions or Cloud Composer for scalability.
 
-License
--------
+## Task 2: Customer Lifetime Value (CLV) Analysis 
+In this task, you need to calculate the **Customer Lifetime Value (CLV)**  using the presentation table created in the previous step. The analysis should include factors such as: 
+- **Average Order Value (AOV)** : Total sales divided by the number of orders.
+ 
+- **Purchase Frequency** : Total orders divided by the number of customers.
+ 
+- **Customer Lifespan** : The time between a customer's first and last purchase.
+
+### Calculating CLV 
+
+The formula used for calculating CLV is:
+
+
+```plaintext
+CLV = AOV × Purchase Frequency × Customer Lifespan
+```
+You can run this analysis in **Jupyter Notebook**  or any Python environment.
+### Step-by-Step CLV Calculation: 
+ 
+1. **Average Order Value (AOV)** :
+
+```sql
+SELECT
+  SUM(sales) / COUNT(order_id) AS aov
+FROM `your_project_id.resq_data.presentation_table`;
+```
+ 
+2. **Purchase Frequency** :
+
+```sql
+SELECT
+  COUNT(order_id) / COUNT(DISTINCT user_id) AS purchase_frequency
+FROM `your_project_id.resq_data.presentation_table`;
+```
+ 
+3. **Customer Lifespan** :
+
+```sql
+SELECT
+  AVG(DATE_DIFF(MAX(order_created_at), MIN(order_created_at), DAY)) AS avg_lifespan_days
+FROM `your_project_id.resq_data.presentation_table`
+GROUP BY user_id;
+```
+ 
+4. **Final CLV Calculation** :
+You can multiply the above values to get the final CLV estimate.
+
+### Dashboard Visualization 
+To visualize the CLV analysis, create a **Looker Studio (Google Data Studio)**  dashboard with the following components: 
+- **Total Revenue**  (Sum of `sales`).
+ 
+- **Total Orders**  (Count of `order_id`).
+ 
+- **Total Customers**  (Count of distinct `user_id`).
+ 
+- **Average Order Value (AOV)**  (calculated from total revenue and orders).
+ 
+- **Top Partners by Sales**  (Bar Chart).
+ 
+- **CLV**  (Key Performance Indicator).
+
+
+---
+
+
+## Challenges and Solutions 
+
+### Data Extraction and Loading 
+ 
+- Utilizes the `sqlite3` library to connect to the SQLite database and load the data into BigQuery using the `google-cloud-bigquery` library.
+
+### Data Transformation 
+
+- Combines data from the three tables and casts columns to appropriate data types.
+
+### CLV Calculation and Dashboard 
+ 
+- Provides a clear approach to calculating CLV and visualizing the results in **Looker Studio** .
+
+
+---
+
+
+## License 
 
 This project is provided under the MIT License.
+
+
+---
+
 
 
