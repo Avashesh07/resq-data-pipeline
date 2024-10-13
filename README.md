@@ -265,51 +265,42 @@ The formula used for calculating CLV is:
 ```plaintext
 CLV = AOV × Purchase Frequency × Customer Lifespan
 ```
-You can run this analysis in **Jupyter Notebook**  or any Python environment.
+You can run this analysis in **Jupyter Notebook**  or through Python. Assuming the `df` is the presentation table.
 ### Step-by-Step CLV Calculation: 
  
 1. **Average Order Value (AOV)** :
 
-```sql
-SELECT
-  SUM(sales) / COUNT(order_id) AS aov
-FROM `your_project_id.resq_data.presentation_table`;
+```python
+# Calculate Total Revenue and Total Orders
+total_revenue = df['sales'].sum()
+total_orders = df['order_id'].nunique()
+# Calculate Average Order Value
+aov = total_revenue / total_orders
 ```
  
 2. **Purchase Frequency** :
 
-```sql
-SELECT
-  COUNT(order_id) / COUNT(DISTINCT user_id) AS purchase_frequency
-FROM `your_project_id.resq_data.presentation_table`;
+```python
+# Calculate Total Customers
+total_customers = df['user_id'].nunique()
+
+# Calculate Purchase Frequency
+purchase_frequency = total_orders / total_customers
 ```
  
 3. **Customer Lifespan** :
 
-```sql
-SELECT
-  AVG(DATE_DIFF(MAX(order_created_at), MIN(order_created_at), DAY)) AS avg_lifespan_days
-FROM `your_project_id.resq_data.presentation_table`
-GROUP BY user_id;
+```python
+# Average Customer Lifespan
+customer_lifespans = df.groupby('user_id')['order_created_at'].agg(['min', 'max'])
+customer_lifespans['lifespan_days'] = (customer_lifespans['max'] - customer_lifespans['min']).dt.days
+customer_lifespans['lifespan_days'] = customer_lifespans['lifespan_days'].replace(0, 1)  # Handle single purchases
+average_lifespan_days = customer_lifespans['lifespan_days'].mean()
+average_lifespan_years = average_lifespan_days / 365
 ```
  
 4. **Final CLV Calculation** :
 You can multiply the above values to get the final CLV estimate.
-
-### Dashboard Visualization 
-To visualize the CLV analysis, create a **Looker Studio (Google Data Studio)**  dashboard with the following components: 
-- **Total Revenue**  (Sum of `sales`).
- 
-- **Total Orders**  (Count of `order_id`).
- 
-- **Total Customers**  (Count of distinct `user_id`).
- 
-- **Average Order Value (AOV)**  (calculated from total revenue and orders).
- 
-- **Top Partners by Sales**  (Bar Chart).
- 
-- **CLV**  (Key Performance Indicator).
-
 
 ---
 
@@ -326,7 +317,7 @@ To visualize the CLV analysis, create a **Looker Studio (Google Data Studio)**  
 
 ### CLV Calculation and Dashboard 
  
-- Provides a clear approach to calculating CLV and visualizing the results in **Looker Studio** .
+- Provides a clear approach to calculating CLV.
 
 
 ---
@@ -337,7 +328,6 @@ To visualize the CLV analysis, create a **Looker Studio (Google Data Studio)**  
 This project is provided under the MIT License.
 
 
----
 
 
 
